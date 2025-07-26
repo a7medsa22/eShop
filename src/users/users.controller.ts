@@ -1,16 +1,17 @@
 import { Controller, Get, Post } from '@nestjs/common';
-@Controller({})
+import { UsersService } from './user.service';
+@Controller('api/users')
 export class UsersController {
-  // @Post('api/products')
-  //   public
+  constructor(private usersService:UsersService){}
+  @Post()
+  createUser() {
+    return this.usersService.create();
+  }
 
   //Get ~/api/users
-  @Get('api/users')
+  @Get()
   getUser() {
-    return [
-      { id: 1, name: 'Ahmed' },
-      { id: 2, name: 'mohamed' },
-    ];
-  }
+    return this.usersService.getAll();
+  };
   
 }

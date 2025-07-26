@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Param, NotFoundException, Put, Delete,ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, NotFoundException, Put, Delete,ParseIntPipe,forwardRef } from '@nestjs/common';
 import { CreateProductDto } from './dtos/create-product.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
 import { ProductService } from "./products.service";
@@ -6,7 +6,7 @@ type productType = { id: number, title: string, price: number }
 
 @Controller('api/products')
 export class ProductsController {
-  constructor(private readonly productService:ProductService){}
+  constructor(private readonly productService: ProductService) { }
    
   //POST: ~/api/proucts
   @Post()
@@ -25,12 +25,12 @@ export class ProductsController {
   };
   //PUT: ~/api/proucts/:id
   @Put(':id')
-  public UpdateOneProducts(@Param('id') id: string, @Body() body: UpdateProductDto) {
+  public UpdateOneProducts(@Param('id') id: number, @Body() body: UpdateProductDto) {
    return this.productService.UpdateOne(id,body);
   };
   //DELET: ~/api/proucts/:id
   @Delete(':id')
-  public getOneProducts(@Param('id') id: string) {
+  public DeleteOneProducts(@Param('id') id: number) {
     return this.productService.DeleteOne(id);
   };
 

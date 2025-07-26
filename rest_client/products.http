@@ -8,6 +8,9 @@ POST http://localhost:3000/api/products
 Content-Type: application/json
 
 {
-    "title": "product",
-    "price": 12
+    "title": "product3",
+    "description": "product description 333",
+    "price": 20
 }
+###
+GET http://localhost:3000/api/reviews
