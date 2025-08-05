@@ -1,32 +1,25 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne } from "typeorm";
-import { Review } from "src/reviews/review.entity";
+import { Column, CreateDateColumn, Entity, ManyToOne, PrimaryColumn, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { current_TimeStamp } from "src/utils/constrant";
+import { Product } from "src/products/products.entity";
 import { User } from "src/utils/user.entity";
 
-
-@Entity({ name: 'products' })
-export class Product {
+@Entity({ name: 'reviews' })
+export class Review {
     @PrimaryGeneratedColumn()
     id: number;
-
     @Column({ type: 'varchar', length: 150 })
     title: string;
-
-    @Column()
-    description: string;
-
-    @Column({ type: 'float' })
-    price: number;
-
+    @Column({ type: 'varchar' })
+    comment: string;
     @CreateDateColumn({ type: 'timestamp', default: () => current_TimeStamp })
     createAt: Date;
 
     @UpdateDateColumn({ type: 'timestamp', default: () => current_TimeStamp, onUpdate: current_TimeStamp })
     updateAt: Date;
 
-    @OneToMany(() => Review, (review) => review.product)
-    reviews: Review[];
-
-    @ManyToOne(() => User, (user) => user.products)
+    @ManyToOne(() => Product, (product) => product.reviews)
+    product: Product;
+    @ManyToOne(() => User, (user) => user.reviews)
     user: User
+
 }

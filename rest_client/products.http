@@ -4,13 +4,29 @@ GET http://localhost:3000/api/products
 GET http://localhost:3000/api/products/1
 
 ### 
-POST http://localhost:3000/api/products
+POST http://localhost:3000/api/users/auth/register
 Content-Type: application/json
 
 {
-    "title": "product3",
-    "description": "product description 333",
-    "price": 20
+    "username": "Ahmed",
+    "email": "ahmed1234@gmail.com",
+    "password":"123456"
 }
+###
+POST http://localhost:3000/api/users/auth/login
+Content-Type: application/json
+
+{
+    "email": "ahmed123@gmail.com",
+    "password":"123456"
+}
+###
+GET http://localhost:3000/api/users
+Content-Type: application/json
+headers: {
+    "Authorization": "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlclR5cGUiOiJub3JtYWxfdXNlciIsImlhdCI6MTc1NDI0MzE5NSwiZXhwIjoxNzU0MjQ2Nzk1fQ.9bHvk4_qjXMwjOUwzujvW-kGXm7mv8YYQKThdj5ZiqI"
+    }
+    
+
 ###
 GET http://localhost:3000/api/reviews

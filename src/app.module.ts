@@ -1,10 +1,13 @@
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { UsersModule } from './users/users.module';
 import { ProductsModule } from './products/products.module';
 import { ReviewsModule } from './reviews/reviews.module';
 import { TypeOrmModule, TypeOrmModuleOptions } from "@nestjs/typeorm";
 import { Product } from './products/products.entity';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { User } from './utils/user.entity';
+import { Review } from './reviews/review.entity';
+import { APP_INTERCEPTOR } from '@nestjs/core';
 @Module({
   imports: [
     UsersModule,
@@ -20,7 +23,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
           username: config.get<string>("DB_USERNAME"),
           password: config.get<string>("DB_PASSWORD"),
           database: config.get<string>("DB_DATABASE"),
-          entities: [Product],
+          entities: [Product, User, Review],
           synchronize: process.env.NODE_ENV !== 'production'
         }
       }
@@ -32,7 +35,12 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
     })
   ],
   controllers: [],
-  providers: [],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass:ClassSerializerInterceptor,
+    }
+  ],
   exports: [],
 })
 export class AppModule { }
