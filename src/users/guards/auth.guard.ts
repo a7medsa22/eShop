@@ -9,14 +9,14 @@ export class AuthGuard implements CanActivate {
         private configService: ConfigService,
     ) { }
     async canActivate(context: ExecutionContext) {
-        const requset: Request = context.switchToHttp().getRequest();
-        const [type, token] = requset.headers.authorization?.split(" ") ?? [];
+        const request: Request = context.switchToHttp().getRequest();
+        const [type, token] = request.headers.authorization?.split(" ") ?? [];
         if (token && type === "Bearer") {
             try {
                 const payload = this.jwtService.verifyAsync(token,
                     { secret: this.configService.get<string>("JWT_SECRET") })
                 
-                requset[CURRENT_USER_KEY] = payload;
+                request[CURRENT_USER_KEY] = payload;
             } catch (error) {
                 throw new UnauthorizedException("access denied, invalid token")
             }

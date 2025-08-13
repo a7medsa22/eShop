@@ -1,7 +1,8 @@
 ###
-GET http://localhost:3000/api/products
+GET http://localhost:3000/api/products?title=o&maxPrice=1000&minPrice=500
+
 ###
-GET http://localhost:3000/api/products/1
+GET http://localhost:3000/api/products/4
 
 ### 
 POST http://localhost:3000/api/users/auth/register

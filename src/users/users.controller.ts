@@ -1,11 +1,11 @@
-import { Body, Controller, Get, HttpCode, Post, UseGuards,UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Post, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { UserRegisterDto } from './dtos/user.register';
 import { userLoginDto } from './dtos/user.login';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { JwtPayloadType } from 'src/utils/type';
 import { AuthGuard } from './guards/auth.guard';
-import { UserType } from 'src/utils/user.entity';
+import { UserType } from 'src/users/entities/user.entity';
 import { Roles } from './decorators/user-role.decorator';
 import { AuthRoleGuard } from './guards/auth-role.guard';
 import { ClassSerializerInterceptor } from '@nestjs/common';

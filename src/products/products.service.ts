@@ -1,16 +1,18 @@
-import {  Injectable, NotFoundException } from "@nestjs/common";
+
+
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { CreateProductDto } from "./dtos/create-product.dto";
 import { UpdateProductDto } from "./dtos/update-product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
-import { Product } from "./products.entity";
-import { Repository } from "typeorm";
+import { Product } from "./entities/products.entity";
+import { Between, Like, Repository } from "typeorm";
 import { UsersService } from "src/users/user.service";
 
 @Injectable()
-export class ProductService {
+export class ProductsService {
     constructor(@InjectRepository(Product)
     private readonly productsRepository: Repository<Product>,
-        private readonly userService:UsersService
+        private readonly userService: UsersService
     ) { }
     /**
      * create new product
@@ -21,14 +23,14 @@ export class ProductService {
 
     public async createNew(dto: CreateProductDto, userId: number) {
         const user = await this.userService.getCurrentUser(userId)
-        if(!user){
+        if (!user) {
             throw new NotFoundException("user not found")
         }
         const newProduct = this.productsRepository.create({
             ...dto,
             user
         });
-        return this.productsRepository.save(newProduct,{
+        return this.productsRepository.save(newProduct, {
 
         });
     };
@@ -40,8 +42,13 @@ export class ProductService {
      * @param isAdmin boolean - Whether to include user relations
      * @returns Promise<Product[]>
      */
-    public async getAll(isAdmin: boolean = false): Promise<Product[]> {
+    public async getAll(isAdmin: boolean = false, title?: string, maxPrice?: string, minPrice?: string): Promise<Product[]> {
+        const filters = {
+            ...(title ? { title: Like(`%${title}%`) } : {}),
+            ...(maxPrice && minPrice ? { price: Between(parseInt(minPrice), parseInt(maxPrice)) } : {})
+        }
         return this.productsRepository.find({
+            where: filters,
             relations: {
                 reviews: true,
                 ...(isAdmin && { user: true })
@@ -54,7 +61,7 @@ export class ProductService {
      * @returns Promise<Product> - The retrieved product
      */
     public async getOne(id: number): Promise<Product> {
-        const product = await this.productsRepository.findOne({ where: { id } ,relations:{reviews:true,user:true}})
+        const product = await this.productsRepository.findOne({ where: { id }, relations: { reviews: true, user: true } })
         if (!product) {
             throw new NotFoundException("product Not found");
         }
@@ -68,7 +75,7 @@ export class ProductService {
      */
     public async UpdateOne(id: number, dto: UpdateProductDto): Promise<Product> {
         const product = await this.getOne(id)
-       
+
         product.title = dto.title ?? product.title
         product.description = dto.description ?? product.description
         product.price = dto.price ?? product.price;
@@ -82,7 +89,7 @@ export class ProductService {
      */
     public async DeleteOne(id: number): Promise<{ message: string }> {
         const product = await this.getOne(id)
-       
+
         await this.productsRepository.remove(product);
         return { message: `product deleted successfully with id: ${id}` };
     };

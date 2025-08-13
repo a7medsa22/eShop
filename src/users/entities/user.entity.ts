@@ -1,7 +1,7 @@
 import { Column, Entity, CreateDateColumn, UpdateDateColumn, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { current_TimeStamp } from "src/utils/constrant";
-import { Product } from "src/products/products.entity";
-import { Review } from "src/reviews/review.entity";
+import { Product } from "src/products/entities/products.entity";
+import { Review } from "src/reviews/entities/review.entity";
 import { Exclude } from "class-transformer";
 
 

@@ -3,7 +3,7 @@ import { ConfigService } from "@nestjs/config";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { UsersService } from "../user.service";
-import { UserType } from "src/utils/user.entity";
+import { UserType } from "src/users/entities/user.entity";
 import { Request } from "express";
 import { CURRENT_USER_KEY } from "src/utils/constrant";
 
@@ -14,7 +14,7 @@ export class AuthRoleGuard implements CanActivate {
         private readonly reflector: Reflector,
         private readonly userService: UsersService
 
-    ) { }   
+    ) { }
     async canActivate(context: ExecutionContext) {
         const roles = this.reflector.getAllAndOverride<UserType[]>(
             'roles',
