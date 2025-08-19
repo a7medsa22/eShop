@@ -10,7 +10,8 @@ export class Review {
 
     @Column({ type: 'varchar', length: 150 })
     comment: string;
-    @Column()
+    
+    @Column({type:'float'})
     rating: number
 
     @CreateDateColumn({ type: 'timestamp', default: () => current_TimeStamp })
@@ -18,9 +19,9 @@ export class Review {
 
     @UpdateDateColumn({ type: 'timestamp', default: () => current_TimeStamp, onUpdate: current_TimeStamp })
     updateAt: Date;
-    @ManyToOne(() => Product, (product) => product.reviews)
+    @ManyToOne(() => Product, (product) => product.reviews,{onDelete:'CASCADE'})
     product: Product;
-    @ManyToOne(() => User, (user) => user.reviews)
+    @ManyToOne(() => User, (user) => user.reviews,{onDelete:'CASCADE'})
     user: User
 
 }

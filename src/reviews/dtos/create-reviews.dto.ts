@@ -4,7 +4,7 @@ export class CreateReviewDto {
     @IsNumber({allowInfinity:false,allowNaN:false,maxDecimalPlaces:2})
     @Min(1)
     @Max(5)
-    rating: number
+    rating: number      
     @IsString()
     @Length(3, 200)
     comment: string

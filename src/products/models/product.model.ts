@@ -1,11 +1,9 @@
-import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne } from "typeorm";
 import { Review } from "src/reviews/entities/review.entity";
-import { current_TimeStamp } from "src/utils/constrant";
 import { User } from "src/users/entities/user.entity";
 import { Field, Float, Int, ObjectType } from "@nestjs/graphql";
 
 @ObjectType()
-export class Product {
+export class ProductType {
     @Field(() => Int)
     id: number;
 

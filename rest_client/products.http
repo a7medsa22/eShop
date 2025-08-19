@@ -1,10 +1,11 @@
 ###
 GET http://localhost:3000/api/products?title=o&maxPrice=1000&minPrice=500
 
-###
-GET http://localhost:3000/api/products/4
 
-### 
+###
+GET http://localhost:3000/api/products
+
+##### 
 POST http://localhost:3000/api/users/auth/register
 Content-Type: application/json
 

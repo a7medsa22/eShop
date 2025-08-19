@@ -74,7 +74,7 @@ export class ProductsService {
      * @returns Promise<Product> - The updated product  
      */
     public async UpdateOne(id: number, dto: UpdateProductDto): Promise<Product> {
-        const product = await this.getOne(id)
+              const product = await this.getOne(id)
 
         product.title = dto.title ?? product.title
         product.description = dto.description ?? product.description

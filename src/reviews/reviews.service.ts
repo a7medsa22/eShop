@@ -44,11 +44,16 @@ export class ReviewService {
   }
   /**
    * Retrieves all reviews from the database.
-   * 
+   *  @param pageNumber 
+   * @param pageSize 
+   * @description This method retrieves all reviews from the database.
    * @returns  service that returns all reviews
    */
-  public getAll() {
-    return this.reviewRepository.find({order:{createAt :'DESC' }})
+  public getAll(pageNumber:number,pageSize:number) {
+    return this.reviewRepository.find({
+      skip: pageSize * (pageNumber - 1) || 0, 
+      take: pageSize  || 10,
+      order:{createAt :'DESC'}})
   };
   /**
    *  Updates a review by its ID.
@@ -62,11 +67,11 @@ export class ReviewService {
   public async updateOne(id:number,userId:number,dto:UpdateReviewDto){
     const review = await this.getOne(id);
 
-    review.rating = dto.rating ?? review.rating;
-    review.comment = dto.comment ?? review.comment;
     if(review.user.id !== userId) {
       throw new ForbiddenException("you are not allowed to update this review");
     }
+    review.rating = dto.rating ?? review.rating;
+    review.comment = dto.comment ?? review.comment;
 
     return this.reviewRepository.save(review);
   }
@@ -83,7 +88,7 @@ export class ReviewService {
     {
          await this.reviewRepository.remove(review);
     return {message:"review has been deleted"}
-}
+} 
   throw new ForbiddenException("you are not allowed");
    }
 /**
@@ -92,7 +97,7 @@ export class ReviewService {
  * @returns  The review with the specified ID.
  */
 private async getOne(id:number){
- const review = await this.reviewRepository.findOne({where:{id}});
+ const review = await this.reviewRepository.findOne({where:{id},relations: ['user', 'product'],});
  if(!review)  throw new NotFoundException("product Not found");
  return review;
 }
