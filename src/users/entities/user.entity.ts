@@ -25,6 +25,8 @@ export class User {
     userType: UserType;
     @Column({ type: 'boolean', default: false })
     isAccountVerified: boolean;
+    @Column({ type: 'varchar', nullable: true })
+    nameProfileImage:string;
 
     @CreateDateColumn({ type: 'timestamp', default: () => current_TimeStamp })
     createAt: Date;
