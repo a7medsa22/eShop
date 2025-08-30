@@ -25,7 +25,7 @@ export class AuthRoleGuard implements CanActivate {
         const request: Request = context.switchToHttp().getRequest();
         const authHeader = request.headers.authorization;
         if (!authHeader) throw new UnauthorizedException('access denied')
-        const [type, token] = authHeader.split(' ') ?? []
+        const [type, token] = authHeader.split(' ') ?? [];
         if (token && type === 'Bearer') {
             try {
                 const payload = await this.jwtService.verifyAsync(token,

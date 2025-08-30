@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { BadRequestException, Module } from '@nestjs/common';
 import { UsersController } from './users.controller';
 import { UsersService } from './user.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -8,6 +8,9 @@ import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from './guards/auth.guard';
 import { AuthRoleGuard } from './guards/auth-role.guard';
 import { Reflector } from '@nestjs/core';
+import multer, { diskStorage } from 'multer';
+import { MulterModule } from '@nestjs/platform-express';
+import { MailsModule } from 'src/mails/mails.module';
 
 @Module({
     controllers: [UsersController],
@@ -26,7 +29,25 @@ import { Reflector } from '@nestjs/core';
                     }
                 }
             }
-        })
+        }),
+        MulterModule.register({
+            storage:diskStorage({
+              destination:'./image/users',
+              filename:(req,file,cb) =>{
+                const prefix = `${Date.now()}-${Math.round(Math.random() * 1000000)}`
+                const sanitizedName = file.originalname.replace(/\s+/g, '-').toLowerCase();
+                const filename = `${prefix}-${sanitizedName}`;
+                cb(null,filename);
+              }
+            }),
+            fileFilter:(req,file,cb)=>{
+              if(file.mimetype.startsWith('image')) cb(null,true)
+              else cb(new BadRequestException('Only image file allowed'),false)
+            },
+            limits:{fileSize : 1024 * 1024 * 3}
+          }),
+          
+          MailsModule
     ]
 })
 export class UsersModule { }

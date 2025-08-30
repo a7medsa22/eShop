@@ -11,10 +11,9 @@ import * as bcrypt from "bcryptjs";
 import { userLoginDto } from "./dtos/user.login";
 import { JwtService } from "@nestjs/jwt";
 import { AccessTokenType, JwtPayloadType } from "src/utils/type";
-import { time } from "console";
 import { join } from "path";
 import { unlinkSync } from "fs";
-import { url } from "inspector";
+import { MailService } from "src/mails/mails.service";
 
 
 @Injectable()
@@ -22,6 +21,7 @@ export class UsersService {
     constructor(
         @InjectRepository(User) private readonly userRepository: Repository<User>,
         private readonly jwtService: JwtService,
+        private mailService:MailService,
 
     ) { }
     /**
@@ -62,6 +62,8 @@ export class UsersService {
         if (!isPasswordMatch) throw new BadRequestException("Invalid email or password");
 
         const accessToken = await this.createToken({ id: user.id, userType: user.userType })
+
+        await this.mailService.sendLoginEmail(user.email);
         return { accessToken };
     }
     /**
