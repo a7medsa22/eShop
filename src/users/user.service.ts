@@ -14,6 +14,8 @@ import { AccessTokenType, JwtPayloadType } from "src/utils/type";
 import { join } from "path";
 import { unlinkSync } from "fs";
 import { MailService } from "src/mails/mails.service";
+import { randomBytes } from "crypto";
+import { ConfigService } from "@nestjs/config";
 
 
 @Injectable()
@@ -22,6 +24,7 @@ export class UsersService {
         @InjectRepository(User) private readonly userRepository: Repository<User>,
         private readonly jwtService: JwtService,
         private mailService:MailService,
+        private config:ConfigService
 
     ) { }
     /**
@@ -29,7 +32,7 @@ export class UsersService {
  * @param registerDto UserRegisterDto
  * @returns JWT Token
  */
-    public async register(registerDto: UserRegisterDto): Promise<AccessTokenType> {
+    public async register(registerDto: UserRegisterDto){
         const { username, email, password } = registerDto;
         const user = await this.userRepository.findOne({ where: { email } })
         if (user) throw new BadRequestException('email already exists')
@@ -40,20 +43,20 @@ export class UsersService {
         let newUser = this.userRepository.create({
             username,
             email,
-            password: hashPassword
+            password: hashPassword,
+            verificationToken:randomBytes(32).toString('hex'),
         });
         await this.userRepository.save(newUser);
-
-        const accessToken = await this.createToken({ id: newUser.id, userType: newUser.userType })
-
-        return { accessToken };
+           const link = `${this.config.get<string>("BASE_URL2")}/api/users/verify/${newUser.id}/${newUser.verificationToken}`
+      await this.mailService.sendVerifyEmailTempleate(newUser.email,link);
+        return { message:"Verification token has been sent to your email" };
     }
     /**
  * login user account
  * @param loginDto userLoginDto
  * @returns JWT Token
  */
-    public async login(loginDto: userLoginDto): Promise<AccessTokenType> {
+    public async login(loginDto: userLoginDto) {
         const { email, password } = loginDto
         const user = await this.userRepository.findOne({ where: { email } })
         if (!user) throw new BadRequestException("Invalid email or password");
@@ -61,9 +64,20 @@ export class UsersService {
         const isPasswordMatch = await bcrypt.compare(password, user.password)
         if (!isPasswordMatch) throw new BadRequestException("Invalid email or password");
 
-        const accessToken = await this.createToken({ id: user.id, userType: user.userType })
+        if(!user.isAccountVerified){
+            let verify = user.verificationToken;
+            if(verify === null){
+             user.verificationToken = randomBytes(32).toString('hex');
+             const resulte = await this.userRepository.save(user);
+             verify = resulte.verificationToken
+            }
+         const link = `${this.config.get<string>("BASE_URL2")}/api/users/verify/${user.id}/${verify}`
+         await this.mailService.sendVerifyEmailTempleate(user.email,link);
+              return { message:"Verification token has been sent to your email" };
 
-        await this.mailService.sendLoginEmail(user.email);
+        }
+
+        const accessToken = await this.createToken({ id: user.id, userType: user.userType })
         return { accessToken };
     }
     /**
@@ -115,8 +129,21 @@ export class UsersService {
 
       return await this.userRepository.save(user);
     }
-   
 
+    public async verifyEmail(userId:number,token: string) {
+          const user = await this.getCurrentUser(userId);
+           if(user.verificationToken === null) 
+            throw new BadRequestException("User is already verified");
+           if(user.verificationToken !== token) 
+            throw new BadRequestException("Invalid Token");
+           
+           user.verificationToken = null;
+            user.isAccountVerified = true;
+            await this.userRepository.save(user);
+            return {message: "Email verified successfully,please login to continue"};
+    }
+        
+ 
     /**
  * create token account
  * @param payload JwtPayloadType

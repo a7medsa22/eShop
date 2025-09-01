@@ -1,4 +1,4 @@
-import { BadRequestException, Body, Controller, Delete, Get, HttpCode, Param, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
+import { BadRequestException, Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './user.service';
 import { UserRegisterDto } from './dtos/user.register';
 import { userLoginDto } from './dtos/user.login';
@@ -10,10 +10,15 @@ import { Roles } from './decorators/user-role.decorator';
 import { AuthRoleGuard } from './guards/auth-role.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
+import { get } from 'http';
+import { ConfigService } from '@nestjs/config';
 
 @Controller('api/users')
 export class UsersController {
-  constructor(private readonly usersService: UsersService) { }
+  constructor(private readonly usersService: UsersService,
+            private config:ConfigService
+    
+  ) { }
 
   // POST  ~/api/user/auth/register
   @Post('auth/register')
@@ -58,6 +63,12 @@ export class UsersController {
   @UseGuards(AuthRoleGuard)
   public deleteUser(@CurrentUser() payload:JwtPayloadType) {
     return this.usersService.removeProfileIamge(payload.id);
+  }
+  //~users/verify/:userid/verificationToken`
+
+  @Get("verify/:id/:verificationToken")
+  public verify(@Param('id',ParseIntPipe)id:number,@Param('verificationToken')verifyToken:string) {
+    return this.usersService.verifyEmail(id,verifyToken);
   }
   
 }

@@ -6,19 +6,27 @@ export class MailService{
 constructor(private readonly mailerService:MailerService){}
     public async sendLoginEmail(email:string){
         try {
-        const today= new Date()
+        const today= new Date().toLocaleString();
            await this.mailerService.sendMail({
             to:email,
-            from:`<no-body@mail-nestJS-app.com>`,
-            subject:`Log in `,
-            html:
-            `
-             <div>
-             <h2>Hi ${email}</h2>
-             <p>You Logged in to your account in ${today.toDateString()} at ${today.toLocaleTimeString()}</p>
-             </div>
-            
-            `
+            subject:`New Login Detected`,
+            template:"login",
+            context:{
+                email,today},
+           })
+    } catch (error) {
+        console.log(error)
+        throw new RequestTimeoutException();
+    }
+    }
+    public async sendVerifyEmailTempleate(email:string,link:string){
+        try {
+           await this.mailerService.sendMail({
+            to:email,
+            subject:`singup to your account`,
+             template:"verify-email",
+            context:{
+                email,link},
            })
     } catch (error) {
         console.log(error)

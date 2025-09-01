@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Email Verification</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color:#f4f4f4; padding:20px;">
+  <div style="max-width:600px; margin:auto; background:#fff; padding:20px; border-radius:8px;">
+    <h2 style="color:#333;">Verify Your Email</h2>
+    <p>Hello {{email}},</p>
+    <p>Thanks for signing up! Please verify your email address by clicking the button below:</p>
+    <p style="text-align:center; margin:30px 0;">
+      <a href="{{link}}" 
+         style="background:#007BFF; color:#fff; text-decoration:none; padding:12px 20px; border-radius:5px;">
+        Verify Email
+      </a>
+    </p>
+    <p>If you didn’t create this account, please ignore this message.</p>
+    <hr/>
+    <p style="font-size:12px; color:#777;">This link will expire in 24 hours.</p>
+  </div>
+</body>
+</html>

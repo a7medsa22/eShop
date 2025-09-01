@@ -23,8 +23,13 @@ export class User {
     password: string;
     @Column({ type: 'enum', enum: UserType, default: UserType.NORMAL_USER })
     userType: UserType;
+
     @Column({ type: 'boolean', default: false })
     isAccountVerified: boolean;
+     
+    @Column({ type: 'varchar', nullable: true })
+    verificationToken: string | null ;
+
     @Column({ type: 'varchar', nullable: true })
     nameProfileImage:string;
 
