@@ -1,5 +1,6 @@
 import { MailerService } from "@nestjs-modules/mailer";
 import { Injectable, RequestTimeoutException } from "@nestjs/common";
+import { log } from "console";
 
 @Injectable()
 export class MailService{
@@ -32,5 +33,21 @@ constructor(private readonly mailerService:MailerService){}
         console.log(error)
         throw new RequestTimeoutException();
     }
+    }
+
+    public async sendResetPasswordEmail(email:string,resetLink:string){
+        try {
+            await this.mailerService.sendMail({
+                to:email,
+                subject:`Reset Password`,
+                template:"resetPassword",
+                context:{
+                    email,resetLink},
+            })
+            
+        } catch (error) {
+         console.log(error);
+         throw new RequestTimeoutException();
+        }
     }
 }

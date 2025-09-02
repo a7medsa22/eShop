@@ -12,10 +12,14 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { diskStorage } from 'multer';
 import { get } from 'http';
 import { ConfigService } from '@nestjs/config';
+import { AuthProvider } from './auth.provider';
+import { forgetPasswordDto } from './dtos/forgetPassword';
+import { resetPasswordDto } from './dtos/user.resetPassword';
 
 @Controller('api/users')
 export class UsersController {
   constructor(private readonly usersService: UsersService,
+            private authProvider:AuthProvider,
             private config:ConfigService
     
   ) { }
@@ -23,13 +27,13 @@ export class UsersController {
   // POST  ~/api/user/auth/register
   @Post('auth/register')
   public createRegister(@Body() body: UserRegisterDto) {
-    return this.usersService.register(body);
+    return this.authProvider.register(body);
   }
 
   @Post('auth/login')
   @HttpCode(200)
   public login(@Body() body: userLoginDto) {
-    return this.usersService.login(body);
+    return this.authProvider.login(body);
   }
   @Get('profile')
   @UseGuards(AuthGuard)
@@ -68,7 +72,27 @@ export class UsersController {
 
   @Get("verify/:id/:verificationToken")
   public verify(@Param('id',ParseIntPipe)id:number,@Param('verificationToken')verifyToken:string) {
-    return this.usersService.verifyEmail(id,verifyToken);
+    return this.authProvider.verifyEmail(id,verifyToken);
   }
+
+  @Post('forget-password')
+  public forgotPassword(@Body() body:forgetPasswordDto){
+    return this.authProvider.sendResetPasswordLink(body.email);
+  }
+
+ @Get("reset-password/:id/:verificationToken")
+  public getResetPassword(@Param('id',ParseIntPipe)id:number,
+  @Param('verificationToken')resetToken:string)
+   {
+    return this.authProvider.getResetPasswordLink(id,resetToken);
+  }
+
+  @Post('reset-password')
+  public resetPassword(@Body() body:resetPasswordDto){
+    return this.authProvider.resetPassword(body);
+  }
+
+  
+
   
 }

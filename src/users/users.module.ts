@@ -11,10 +11,11 @@ import { Reflector } from '@nestjs/core';
 import multer, { diskStorage } from 'multer';
 import { MulterModule } from '@nestjs/platform-express';
 import { MailsModule } from 'src/mails/mails.module';
+import { AuthProvider } from './auth.provider';
 
 @Module({
     controllers: [UsersController],
-    providers: [UsersService, AuthGuard, AuthRoleGuard],
+    providers: [UsersService,AuthProvider ,AuthGuard, AuthRoleGuard],
     exports: [UsersService],
     imports: [
         TypeOrmModule.forFeature([User]),
