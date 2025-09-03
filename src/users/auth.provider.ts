@@ -112,17 +112,17 @@ export class AuthProvider {
         user.resetPasswordExpires = new Date (Date.now() + 3600000)
      await this.userRepository.save(user);
 
-        const link = `${this.config.get<string>("BASE_URL2")}/api/users/reset-password/?token=${token}`
+        const link = `${this.config.get<string>("BASE_URL2")}/api/users/reset-password/${token}`
         await this.mailService.sendResetPasswordEmail(user.email,link);
         return {message: "Reset password link has been sent to your email" };
     }
    
-    public async getResetPasswordLink(userId:number,token:string){
-        const user = await this.userService.getCurrentUser(userId);
-        if(user.resetPasswordToken  === null || user.resetPasswordToken !== token){
-            throw new BadRequestException("Invalid Token");
-        }  
-        return {message: "password reset link now available,can you change your password now"};
+    public async validateResetToken(token:string){
+    const user = await this.userRepository.findOne({where:{resetPasswordToken:token}});
+         if(!user|| !user.resetPasswordExpires || user.resetPasswordExpires.getTime() <  Date.now()){
+           throw new BadRequestException("Invalid or expired reset token");
+       } 
+    return { valid: true, message: "Token is valid. You can now reset your password." };
     }
 
       //reset password

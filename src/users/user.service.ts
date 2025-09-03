@@ -77,9 +77,5 @@ export class UsersService {
 
       return await this.userRepository.save(user);
     }
-    public async resetPassword(){
-        return this.authProvider.hashPassword
-        
-    }
-   
+ 
 }

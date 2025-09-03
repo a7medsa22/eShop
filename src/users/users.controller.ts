@@ -80,16 +80,15 @@ export class UsersController {
     return this.authProvider.sendResetPasswordLink(body.email);
   }
 
- @Get("reset-password/:id/:verificationToken")
-  public getResetPassword(@Param('id',ParseIntPipe)id:number,
-  @Param('verificationToken')resetToken:string)
+ @Get("reset-password/:token")
+  public getResetPassword(@Param('token')token:string)
    {
-    return this.authProvider.getResetPasswordLink(id,resetToken);
+    return this.authProvider.validateResetToken(token);
   }
 
   @Post('reset-password')
   public resetPassword(@Body() body:resetPasswordDto){
-    return this.authProvider.resetPassword(body);
+    return this.authProvider.resetPassword(body.token,body.newPassword);
   }
 
   
