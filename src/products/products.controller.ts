@@ -7,6 +7,7 @@ import { Roles } from 'src/users/decorators/user-role.decorator';
 import { UserType } from 'src/users/entities/user.entity';
 import { CurrentUser } from 'src/users/decorators/current-user.decorator';
 import { JwtPayloadType } from 'src/utils/type';
+import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
 
 @Controller('api/products')
 export class ProductsController {
@@ -21,6 +22,10 @@ export class ProductsController {
   };
   //GET: ~/api/proucts
   @Get()
+  @ApiOperation({description: 'Get List of all products' })
+  @ApiQuery({ name: 'title', type: 'string',required: false })
+  @ApiQuery({ name: 'maxPrice', type: 'string',required: false })
+  @ApiQuery({ name: 'minPrice', type: 'string',required: false })
   public getAllProducts(
     @Query('title') title?: string,
     @Query('maxPrice') maxPrice?: string,
