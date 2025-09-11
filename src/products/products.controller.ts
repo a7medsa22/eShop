@@ -7,7 +7,7 @@ import { Roles } from 'src/users/decorators/user-role.decorator';
 import { UserType } from 'src/users/entities/user.entity';
 import { CurrentUser } from 'src/users/decorators/current-user.decorator';
 import { JwtPayloadType } from 'src/utils/type';
-import { ApiOperation, ApiQuery, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiQuery, ApiResponse, ApiSecurity } from '@nestjs/swagger';
 
 @Controller('api/products')
 export class ProductsController {
@@ -17,6 +17,8 @@ export class ProductsController {
   @Post()
   @UseGuards(AuthRoleGuard)
   @Roles(UserType.ADMIN)
+  @ApiSecurity('bearer')
+  @ApiOperation({description: 'Create a new product' })
   public createNewProduct(@Body() body: CreateProductDto, @CurrentUser() payload: JwtPayloadType) {
     return this.productService.createNew(body, payload.id);
   };
@@ -36,6 +38,8 @@ export class ProductsController {
   @Get('/admin')
   @UseGuards(AuthRoleGuard)
   @Roles(UserType.ADMIN)
+  @ApiSecurity('bearer')
+  @ApiOperation({description: 'Get List of all products' })
   public getAllProductsAdmin(
     @Query('title') title?: string,
     @Query('maxPrice') maxPrice?: string,
@@ -51,6 +55,8 @@ export class ProductsController {
   //PUT: ~/api/proucts/:id (admin only)
   @UseGuards(AuthRoleGuard)
   @Roles(UserType.ADMIN)
+  @ApiSecurity('bearer')
+    @ApiOperation({description: 'update a products' })
   @Put(':id')
   public UpdateOneProducts(@Param('id') id: number, @Body() body: UpdateProductDto) {
     return this.productService.UpdateOne(id, body);
@@ -58,9 +64,10 @@ export class ProductsController {
   //DELET: ~/api/proucts/:id (admin only)
   @UseGuards(AuthRoleGuard)
   @Roles(UserType.ADMIN)
+  @ApiSecurity('bearer')
+  @ApiOperation({description: 'Delete a products' })
   @Delete(':id')
   public DeleteOneProducts(@Param('id') id: number) {
     return this.productService.DeleteOne(id);
   };
-
 }

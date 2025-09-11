@@ -12,7 +12,7 @@ async function bootstrap() {
   .setVersion("1.0")
   .setDescription("E-Shop API")
   .addTag("E-Shop")
-  
+  .addSecurity('bearer',{type:'http',scheme:'bearer',bearerFormat:'JWT' })
   .addBearerAuth()
   .build();
 
