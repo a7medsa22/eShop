@@ -15,6 +15,7 @@ import { ReviewsModule } from './reviews/reviews.module';
 import { Product } from './products/entities/products.entity';
 import { User } from './users/entities/user.entity';
 import { Review } from './reviews/entities/review.entity';
+import { UploadsModule } from './uploads/uploads.module';
 
 @Module({
   imports: [
@@ -44,6 +45,7 @@ import { Review } from './reviews/entities/review.entity';
     UsersModule,
     ProductsModule,
     ReviewsModule,
+    UploadsModule,
   ],
   providers: [
     {

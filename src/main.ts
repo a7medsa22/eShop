@@ -10,8 +10,7 @@ async function bootstrap() {
   const swagger = new DocumentBuilder()
   .setTitle("E-Shop")
   .setVersion("1.0")
-  .setDescription("E-Shop API")
-  .addTag("E-Shop")
+  .setDescription("Api for E-Shop with NestJS with Swagger")
   .addSecurity('bearer',{type:'http',scheme:'bearer',bearerFormat:'JWT' })
   .addBearerAuth()
   .build();
