@@ -8,6 +8,7 @@ import { UserType } from 'src/users/entities/user.entity';
 import { CurrentUser } from 'src/users/decorators/current-user.decorator';
 import { JwtPayloadType } from 'src/utils/type';
 import { ApiOperation, ApiQuery, ApiResponse, ApiSecurity } from '@nestjs/swagger';
+import { SkipThrottle } from '@nestjs/throttler';
 
 @Controller('api/products')
 export class ProductsController {
@@ -19,6 +20,7 @@ export class ProductsController {
   @Roles(UserType.ADMIN)
   @ApiSecurity('bearer')
   @ApiOperation({description: 'Create a new product' })
+  @ApiResponse({description: 'Create a new product' })
   public createNewProduct(@Body() body: CreateProductDto, @CurrentUser() payload: JwtPayloadType) {
     return this.productService.createNew(body, payload.id);
   };
@@ -49,6 +51,8 @@ export class ProductsController {
   }
   //GET: ~/api/proucts/:id 
   @Get(':id')
+  @ApiOperation({description: 'Get a single products' })
+  @ApiResponse({description: 'Get a single products' })
   public getSingleProducts(@Param('id', ParseIntPipe) id: number) {
     return this.productService.getOne(id);
   };
@@ -56,7 +60,7 @@ export class ProductsController {
   @UseGuards(AuthRoleGuard)
   @Roles(UserType.ADMIN)
   @ApiSecurity('bearer')
-    @ApiOperation({description: 'update a products' })
+  @ApiOperation({description: 'update a products' })
   @Put(':id')
   public UpdateOneProducts(@Param('id') id: number, @Body() body: UpdateProductDto) {
     return this.productService.UpdateOne(id, body);

@@ -1,5 +1,5 @@
 import { Module, ClassSerializerInterceptor } from '@nestjs/common';
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { GraphQLModule } from '@nestjs/graphql';
@@ -16,6 +16,7 @@ import { Product } from './products/entities/products.entity';
 import { User } from './users/entities/user.entity';
 import { Review } from './reviews/entities/review.entity';
 import { UploadsModule } from './uploads/uploads.module';
+import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 
 @Module({
   imports: [
@@ -24,6 +25,14 @@ import { UploadsModule } from './uploads/uploads.module';
       isGlobal: true,
       envFilePath: `.env.${process.env.NODE_ENV || 'development'}`,
     }),
+      ThrottlerModule.forRoot([
+ 
+         {
+        
+         ttl:600000, //10 Minutes
+         limit:10 // 10 Requests in 10 minutes
+        },
+        ]),
 
     // Database Connection
     TypeOrmModule.forRootAsync({
@@ -52,6 +61,11 @@ import { UploadsModule } from './uploads/uploads.module';
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
     },
+    {
+      provide:APP_GUARD,
+      useClass:ThrottlerGuard,
+    }
+
   ],
 })
 export class AppModule {}

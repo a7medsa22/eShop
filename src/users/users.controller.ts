@@ -9,14 +9,14 @@ import { UserType } from 'src/users/entities/user.entity';
 import { Roles } from './decorators/user-role.decorator';
 import { AuthRoleGuard } from './guards/auth-role.guard';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { diskStorage } from 'multer';
-import { get } from 'http';
 import { ConfigService } from '@nestjs/config';
 import { AuthProvider } from './auth.provider';
 import { forgetPasswordDto } from './dtos/forgetPassword';
 import { resetPasswordDto } from './dtos/user.resetPassword';
 import { ApiBody, ApiConsumes, ApiOperation, ApiResponse, ApiSecurity } from '@nestjs/swagger';
 import { ImageUploadDto } from './dtos/image-upload.dtp';
+import { throttle } from 'rxjs';
+import { Throttle } from '@nestjs/throttler';
 
 @Controller('api/users')
 export class UsersController {
@@ -38,6 +38,7 @@ export class UsersController {
   @HttpCode(200)
   @ApiOperation({ description: 'Login a user' })
   @ApiResponse({ description: 'Login a user' })
+  @Throttle({default:{ttl:60000,limit:5}}) // 5 Requests in 1 minute
   public login(@Body() body: userLoginDto) {
     return this.authProvider.login(body);
   }
@@ -67,6 +68,7 @@ export class UsersController {
   @ApiSecurity('bearer')
   @ApiOperation({ description: 'Upload a profile image' })
   @ApiResponse({ description: 'Upload a profile image' })
+  @Throttle({default:{ttl:60000,limit:2}}) // 2 Requests in 1 minute
   public async uploudProfileImage(@UploadedFile()file:Express.Multer.File,@CurrentUser() payload:JwtPayloadType){
     if(!file) throw new BadRequestException('file is required')
     return this.usersService.setprofileImage(payload.id,file.filename)
@@ -102,6 +104,7 @@ export class UsersController {
   @Post('forget-password')
   @ApiOperation({ description: 'Send a reset password link' })
   @ApiResponse({ description: 'Send a reset password link' })
+  @Throttle({default:{ttl:60000,limit:3}}) // 3 Requests in 1 minute
   public forgotPassword(@Body() body:forgetPasswordDto){
     return this.authProvider.sendResetPasswordLink(body.email);
   }
@@ -116,6 +119,7 @@ export class UsersController {
   @Post('reset-password')
   @ApiOperation({ description: 'Reset a password' })
   @ApiResponse({ description: 'Reset a password' })
+  @Throttle({default:{ttl:60000,limit:3}}) // 3 Requests in 1 minute
   public resetPassword(@Body() body:resetPasswordDto){
     return this.authProvider.resetPassword(body.token,body.newPassword);
   }
