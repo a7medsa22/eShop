@@ -17,6 +17,7 @@ import { User } from './users/entities/user.entity';
 import { Review } from './reviews/entities/review.entity';
 import { UploadsModule } from './uploads/uploads.module';
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
+import { CartModule } from './cart/cart.module';
 
 @Module({
   imports: [
@@ -55,6 +56,7 @@ import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
     ProductsModule,
     ReviewsModule,
     UploadsModule,
+    CartModule,
   ],
   providers: [
     {
