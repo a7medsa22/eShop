@@ -1,5 +1,5 @@
 import { Column, Entity, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, OneToMany, ManyToOne } from "typeorm";
-import { Review } from "src/reviews/entities/review.entity";
+import { Review } from "../../reviews/entities/review.entity"
 import { current_TimeStamp } from "src/utils/constrant";
 import { User } from "src/users/entities/user.entity";
 

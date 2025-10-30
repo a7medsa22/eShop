@@ -18,7 +18,8 @@ import { Review } from './reviews/entities/review.entity';
 import { UploadsModule } from './uploads/uploads.module';
 import { ThrottlerGuard, ThrottlerModule } from "@nestjs/throttler";
 import { CartModule } from './cart/cart.module';
-
+import { ProductsService } from './products/products.service';
+import { Cart } from './cart/entities/cart.entity';
 @Module({
   imports: [
     // Config Module (Global)
@@ -45,7 +46,7 @@ import { CartModule } from './cart/cart.module';
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_DATABASE'),
-        entities: [Product, User, Review],
+        entities: [Product, User, Review,Cart],
         synchronize: process.env.NODE_ENV !== 'production',
       }),
     }),
@@ -66,7 +67,7 @@ import { CartModule } from './cart/cart.module';
     {
       provide:APP_GUARD,
       useClass:ThrottlerGuard,
-    }
+    },
 
   ],
 })
