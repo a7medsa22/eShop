@@ -6,7 +6,7 @@ import { UpdateProductDto } from "./dtos/update-product.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Product } from "./entities/products.entity";
 import { Between, Like, Repository } from "typeorm";
-import { UsersService } from "src/users/user.service";
+import { UsersService } from "../users/user.service";
 
 @Injectable()
 export class ProductsService {

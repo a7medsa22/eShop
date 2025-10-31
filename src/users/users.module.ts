@@ -7,10 +7,9 @@ import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 import { AuthGuard } from './guards/auth.guard';
 import { AuthRoleGuard } from './guards/auth-role.guard';
-import { Reflector } from '@nestjs/core';
 import multer, { diskStorage } from 'multer';
 import { MulterModule } from '@nestjs/platform-express';
-import { MailsModule } from 'src/mails/mails.module';
+import { MailsModule } from '../mails/mails.module';
 import { AuthProvider } from './auth.provider';
 
 @Module({

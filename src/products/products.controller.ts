@@ -3,10 +3,10 @@ import { CreateProductDto } from './dtos/create-product.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
 import { ProductsService } from "./products.service";
 import { AuthRoleGuard } from "../users/guards/auth-role.guard";
-import { Roles } from 'src/users/decorators/user-role.decorator';
-import { UserType } from 'src/users/entities/user.entity';
-import { CurrentUser } from 'src/users/decorators/current-user.decorator';
-import { JwtPayloadType } from 'src/utils/type';
+import { Roles } from '../users/decorators/user-role.decorator';
+import { UserType } from '../users/entities/user.entity';
+import { CurrentUser } from '../users/decorators/current-user.decorator';
+import { JwtPayloadType } from '../utils/type';
 import { ApiOperation, ApiQuery, ApiResponse, ApiSecurity } from '@nestjs/swagger';
 import { SkipThrottle } from '@nestjs/throttler';
 

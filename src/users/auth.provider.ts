@@ -12,14 +12,11 @@ import { UserRegisterDto } from "./dtos/user.register";
 import * as bcrypt from "bcryptjs";
 import { userLoginDto } from "./dtos/user.login";
 import { JwtService } from "@nestjs/jwt";
-import { AccessTokenType, JwtPayloadType } from "src/utils/type";
-import { join } from "path";
-import { unlinkSync } from "fs";
-import { MailService } from "src/mails/mails.service";
+import {  JwtPayloadType } from "src/utils/type";
+import { MailService } from "../mails/mails.service";
 import { randomBytes } from "crypto";
 import { ConfigService } from "@nestjs/config";
 import { UsersService } from "./user.service";
-import { resetPasswordDto } from "./dtos/user.resetPassword";
 
 @Injectable()
 export class AuthProvider {

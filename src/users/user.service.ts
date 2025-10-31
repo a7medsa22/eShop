@@ -6,15 +6,8 @@ import {
 import { Repository } from "typeorm";
 import { User } from "./entities/user.entity";
 import { InjectRepository } from "@nestjs/typeorm";
-import { UserRegisterDto } from "./dtos/user.register";
-import * as bcrypt from "bcryptjs";
-import { userLoginDto } from "./dtos/user.login";
-import { JwtService } from "@nestjs/jwt";
-import { AccessTokenType, JwtPayloadType } from "src/utils/type";
 import { join } from "path";
 import { unlinkSync } from "fs";
-import { MailService } from "src/mails/mails.service";
-import { randomBytes } from "crypto";
 import { ConfigService } from "@nestjs/config";
 import { AuthProvider } from "./auth.provider";
 
