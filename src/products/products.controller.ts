@@ -35,7 +35,7 @@ export class ProductsController {
     @Query('maxPrice') maxPrice?: string,
     @Query('minPrice') minPrice?: string
   ) {
-    return this.productService.getAll(false, title, maxPrice, minPrice);
+    return this.productService.getAll(title, maxPrice, minPrice);
   }
   @Get('/admin')
   @UseGuards(AuthRoleGuard)
@@ -47,7 +47,7 @@ export class ProductsController {
     @Query('maxPrice') maxPrice?: string,
     @Query('minPrice') minPrice?: string
   ) {
-    return this.productService.getAll(true, title, maxPrice, minPrice);
+    return this.productService.getAllforAdmin(true, title, maxPrice, minPrice);
   }
   //GET: ~/api/proucts/:id 
   @Get(':id')

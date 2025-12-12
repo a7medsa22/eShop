@@ -42,7 +42,7 @@ export class ProductsService {
      * @param isAdmin boolean - Whether to include user relations
      * @returns Promise<Product[]>
      */
-    public async getAll(isAdmin: boolean = false, title?: string, maxPrice?: string, minPrice?: string): Promise<Product[]> {
+    public async getAllforAdmin(isAdmin: boolean = false, title?: string, maxPrice?: string, minPrice?: string): Promise<Product[]> {
         const filters = {
             ...(title ? { title: Like(`%${title}%`) } : {}),
             ...(maxPrice && minPrice ? { price: Between(parseInt(minPrice), parseInt(maxPrice)) } : {})
@@ -55,15 +55,22 @@ export class ProductsService {
             }
         });
     }
+    public async getAll(title?: string, maxPrice?: string, minPrice?: string): Promise<Product[]> {
+        const filters = {
+            ...(title ? { title: Like(`%${title}%`) } : {}),
+            ...(maxPrice && minPrice ? { price: Between(parseInt(minPrice), parseInt(maxPrice)) } : {})
+        }
+        return this.productsRepository.find({where: filters});
+    }
     /**
      * get single product
      * @param id number - ID of the product to retrieve
      * @returns Promise<Product> - The retrieved product
      */
     public async getOne(id: number): Promise<Product> {
-        const product = await this.productsRepository.findOne({ where: { id }, relations: { reviews: true, user: true } })
+        const product = await this.productsRepository.findOne({ where: { id }})
         if (!product) {
-            throw new NotFoundException("product Not found");
+            throw new NotFoundException("Product Not Found");
         }
         return product;
     };
