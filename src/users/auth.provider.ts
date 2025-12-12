@@ -16,7 +16,7 @@ import {  JwtPayloadType } from "src/utils/type";
 import { MailService } from "../mails/mails.service";
 import { randomBytes } from "crypto";
 import { ConfigService } from "@nestjs/config";
-import { UsersService } from "./user.service";
+import { UsersService } from "./users.service";
 
 @Injectable()
 export class AuthProvider {

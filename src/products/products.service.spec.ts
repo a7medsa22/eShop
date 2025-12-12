@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from './products.service';
 import { Repository } from 'typeorm';
 import { Product } from './entities/products.entity';
-import { UsersService } from '../users/user.service';
+import { UsersService } from '../users/users.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { CreateProductDto } from './dtos/create-product.dto';
 import { title } from 'process';
@@ -11,6 +11,7 @@ describe('ProductsService', () => {
   let service: ProductsService;
   let productsRepository:Repository<Product>;
   let REPOSITORY_TOKEN = getRepositoryToken(Product);
+
   const createProduct = {
     title:"Test Product",
     description:"This is a test product",
@@ -47,6 +48,7 @@ describe('ProductsService', () => {
   it('should be defined', () => {
     expect(service).toBeDefined();
   });
+  
   it('productsRepository should be defined', () => {
     expect(productsRepository).toBeDefined();
   });

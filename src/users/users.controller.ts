@@ -1,5 +1,5 @@
 import { BadRequestException, Body, Controller, Delete, Get, HttpCode, Param, ParseIntPipe, Post, Put, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
-import { UsersService } from './user.service';
+import { UsersService } from './users.service';
 import { UserRegisterDto } from './dtos/user.register';
 import { userLoginDto } from './dtos/user.login';
 import { CurrentUser } from './decorators/current-user.decorator';
