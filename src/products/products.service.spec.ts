@@ -57,7 +57,11 @@ describe('ProductsService', () => {
             }),
             findOne: jest.fn().mockImplementation((param: findOneType) =>{
               return Promise.resolve(products.find(p => p.id === param.where.id))
-            })
+            }),
+            remove: jest.fn().mockImplementation((product: Product) =>{
+              const index = products.indexOf(product);
+              if(index != -1) return Promise.resolve(products.splice(index,1));
+            }),
           },
         },
       ],
@@ -128,4 +132,42 @@ describe('ProductsService', () => {
     }
     });
   });
+  describe('update Product', () => {
+    const titleUpdate = 'Updated Product Title';
+
+    it('should update the product title', async () => {
+      const result =  await service.UpdateOne(1,{title: titleUpdate});
+      expect(productsRepository.save).toHaveBeenCalled();
+      expect(productsRepository.save).toHaveBeenCalledTimes(1);
+      expect(result.title).toBe(titleUpdate);
+    });
+    it('should return NotFoundException if product not found', async () => {
+    try {
+       await service.UpdateOne(999,{title: titleUpdate});
+    } catch (error) {
+      expect(error.status).toBe(404);
+      expect(error.message).toBe('Product Not Found');
+    }
+    });
+  });
+  describe('delete Product', () => {
+    it('should call "remove" method in product repository', async () => {
+      await service.DeleteOne(1);
+      expect(productsRepository.remove).toHaveBeenCalled();
+      expect(productsRepository.remove).toHaveBeenCalledTimes(1);
+    });
+    it('should remove the product from the list', async () => {
+     const result = await service.DeleteOne(1);
+     expect(result).toMatchObject({message: `product deleted successfully with id: 1`});
+  });
+  it('should return NotFoundException if product not found', async () => {
+    try {
+       await service.DeleteOne(999);
+    } catch (error) {
+      expect(error.status).toBe(404);
+      expect(error.message).toBe('Product Not Found');
+    }
+    });
+});
+
 });
