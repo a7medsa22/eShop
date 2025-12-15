@@ -42,7 +42,7 @@ export class ProductsService {
      * @param isAdmin boolean - Whether to include user relations
      * @returns Promise<Product[]>
      */
-    public async getAllforAdmin(isAdmin: boolean = false, title?: string, maxPrice?: string, minPrice?: string): Promise<Product[]> {
+    public async getAllforAdmin(isAdmin: boolean = false, title?: string, minPrice?: string, maxPrice?: string): Promise<Product[]> {
         const filters = {
             ...(title ? { title: Like(`%${title}%`) } : {}),
             ...(maxPrice && minPrice ? { price: Between(parseInt(minPrice), parseInt(maxPrice)) } : {})
@@ -55,10 +55,10 @@ export class ProductsService {
             }
         });
     }
-    public async getAll(title?: string, maxPrice?: string, minPrice?: string): Promise<Product[]> {
+    public async getAll(title?: string, minPrice?: number, maxPrice?: number): Promise<Product[]> {
         const filters = {
             ...(title ? { title: Like(`%${title}%`) } : {}),
-            ...(maxPrice && minPrice ? { price: Between(parseInt(minPrice), parseInt(maxPrice)) } : {})
+            ...(maxPrice && minPrice ? { price: Between(minPrice, maxPrice)} : {})
         }
         return this.productsRepository.find({where: filters});
     }

@@ -19,40 +19,42 @@ export class ProductsController {
   @UseGuards(AuthRoleGuard)
   @Roles(UserType.ADMIN)
   @ApiSecurity('bearer')
-  @ApiOperation({description: 'Create a new product' })
-  @ApiResponse({description: 'Create a new product' })
+  @ApiOperation({ description: 'Create a new product' })
+  @ApiResponse({ description: 'Create a new product' })
   public createNewProduct(@Body() body: CreateProductDto, @CurrentUser() payload: JwtPayloadType) {
     return this.productService.createNew(body, payload.id);
   };
   //GET: ~/api/proucts
   @Get()
-  @ApiOperation({description: 'Get List of all products' })
-  @ApiQuery({ name: 'title', type: 'string',required: false })
-  @ApiQuery({ name: 'maxPrice', type: 'string',required: false })
-  @ApiQuery({ name: 'minPrice', type: 'string',required: false })
+  @ApiOperation({ description: 'Get List of all products' })
+  @ApiQuery({ name: 'title', type: 'string', required: false })
+  @ApiQuery({ name: 'maxPrice', type: 'string', required: false })
+  @ApiQuery({ name: 'minPrice', type: 'string', required: false })
   public getAllProducts(
     @Query('title') title?: string,
-    @Query('maxPrice') maxPrice?: string,
-    @Query('minPrice') minPrice?: string
+    @Query('maxPrice') min?: string,
+    @Query('minPrice') max?: string
   ) {
-    return this.productService.getAll(title, maxPrice, minPrice);
+    return this.productService.getAll(title,
+      min ? +min : undefined,
+      max ? +max : undefined);
   }
   @Get('/admin')
   @UseGuards(AuthRoleGuard)
   @Roles(UserType.ADMIN)
   @ApiSecurity('bearer')
-  @ApiOperation({description: 'Get List of all products' })
+  @ApiOperation({ description: 'Get List of all products' })
   public getAllProductsAdmin(
     @Query('title') title?: string,
     @Query('maxPrice') maxPrice?: string,
     @Query('minPrice') minPrice?: string
   ) {
-    return this.productService.getAllforAdmin(true, title, maxPrice, minPrice);
+    return this.productService.getAllforAdmin(true, title, minPrice, maxPrice);
   }
   //GET: ~/api/proucts/:id 
   @Get(':id')
-  @ApiOperation({description: 'Get a single products' })
-  @ApiResponse({description: 'Get a single products' })
+  @ApiOperation({ description: 'Get a single products' })
+  @ApiResponse({ description: 'Get a single products' })
   public getSingleProducts(@Param('id', ParseIntPipe) id: number) {
     return this.productService.getOne(id);
   };
@@ -60,7 +62,7 @@ export class ProductsController {
   @UseGuards(AuthRoleGuard)
   @Roles(UserType.ADMIN)
   @ApiSecurity('bearer')
-  @ApiOperation({description: 'update a products' })
+  @ApiOperation({ description: 'update a products' })
   @Put(':id')
   public UpdateOneProducts(@Param('id') id: number, @Body() body: UpdateProductDto) {
     return this.productService.UpdateOne(id, body);
@@ -69,7 +71,7 @@ export class ProductsController {
   @UseGuards(AuthRoleGuard)
   @Roles(UserType.ADMIN)
   @ApiSecurity('bearer')
-  @ApiOperation({description: 'Delete a products' })
+  @ApiOperation({ description: 'Delete a products' })
   @Delete(':id')
   public DeleteOneProducts(@Param('id') id: number) {
     return this.productService.DeleteOne(id);
