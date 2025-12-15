@@ -3,9 +3,9 @@ import { ConfigService } from "@nestjs/config";
 import { Reflector } from "@nestjs/core";
 import { JwtService } from "@nestjs/jwt";
 import { UsersService } from "../users.service";
-import { UserType } from "src/users/entities/user.entity";
+import { UserType } from "../../users/entities/user.entity";
 import { Request } from "express";
-import { CURRENT_USER_KEY } from "src/utils/constrant";
+import { CURRENT_USER_KEY } from "../../utils/constrant";
 
 @Injectable()
 export class AuthRoleGuard implements CanActivate {
