@@ -67,7 +67,7 @@ describe('AuthProvider', () => {
             ],
         }).compile();
 
-        authProvider = module.get<AuthProvider>( AuthProvider) as jest.Mocked<AuthProvider>;
+        authProvider = module.get<AuthProvider>(AuthProvider) as jest.Mocked<AuthProvider>;
         userRepository = module.get<Repository<User>>(getRepositoryToken(User)) as jest.Mocked<Repository<User>>;
         mailService = module.get(MailService);
         configService = module.get(ConfigService);
@@ -95,5 +95,32 @@ describe('AuthProvider', () => {
             expect(mailService.sendVerifyEmailTempleate).not.toHaveBeenCalled();
         });
     });
-    
+    describe('when email does not exists', () => {
+        it('show create user and send verification email', async () => {
+            const user = mockUser({ password: 'hash-password' })
+            userRepository.findOne.mockResolvedValue(null);
+            userRepository.create.mockReturnValue(
+                mockUser({ password: 'hashed-password' }),
+            );
+            userRepository.save.mockResolvedValue(
+                mockUser({ id: 1 }),
+            );
+
+            const result = await authProvider.register(registerDto);
+
+            expect(userRepository.findOne).toHaveBeenCalledWith({
+                where:{email:registerDto.email}
+            });
+
+            expect(userRepository.create).toHaveBeenCalled();
+            expect(userRepository.save).toHaveBeenCalled();
+
+            expect(mailService.sendVerifyEmailTempleate).toHaveBeenCalledTimes(1);
+            
+            expect(result).toEqual({
+                message: 'Verification token has been sent to your email'
+            });
+            
+        })
+    })
 });
