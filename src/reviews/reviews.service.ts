@@ -1,13 +1,13 @@
 import { Injectable, Inject, forwardRef, NotFoundException, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UsersService } from 'src/users/users.service';
+import { UsersService } from '../users/users.service';
 import { Review } from './entities/review.entity';
 import { Repository } from 'typeorm';
-import { ProductsService } from 'src/products/products.service';
+import { ProductsService } from '../products/products.service';
 import { CreateReviewDto } from './dtos/create-reviews.dto';
-import { JwtPayloadType } from 'src/utils/type';
+import { JwtPayloadType } from '../utils/type';
 import { UpdateReviewDto } from './dtos/update-reviews.dto';
-import { UserType } from 'src/users/entities/user.entity';
+import { UserType } from '../users/entities/user.entity';
 
 @Injectable()
 export class ReviewService {

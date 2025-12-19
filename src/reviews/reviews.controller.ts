@@ -1,13 +1,13 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UseGuards } from '@nestjs/common';
 import { ReviewService } from './reviews.service';
 import { CreateReviewDto } from './dtos/create-reviews.dto';
-import { CurrentUser } from 'src/users/decorators/current-user.decorator';
+import { CurrentUser } from '../users/decorators/current-user.decorator';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtPayloadType } from 'src/utils/type';
-import { AuthGuard } from 'src/users/guards/auth.guard';
-import { Roles } from 'src/users/decorators/user-role.decorator';
-import { AuthRoleGuard } from 'src/users/guards/auth-role.guard';
-import { UserType } from 'src/users/entities/user.entity';
+import { AuthGuard } from '../users/guards/auth.guard';
+import { Roles } from '../users/decorators/user-role.decorator';
+import { AuthRoleGuard } from '../users/guards/auth-role.guard';
+import { UserType } from '../users/entities/user.entity';
 import { UpdateReviewDto } from './dtos/update-reviews.dto';
 import { ApiOperation, ApiResponse, ApiSecurity } from '@nestjs/swagger';
 

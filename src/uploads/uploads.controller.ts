@@ -1,7 +1,7 @@
 import { BadRequestException, Controller, Post, UploadedFiles, UseInterceptors } from "@nestjs/common";
 import { FilesInterceptor } from "@nestjs/platform-express";
 import { ApiBody, ApiConsumes } from "@nestjs/swagger";
-import { ImageUploadDto } from "src/users/dtos/image-upload.dtp";
+import { ImageUploadDto } from "../users/dtos/image-upload.dtp";
 
 
 @Controller('api/uploads')
